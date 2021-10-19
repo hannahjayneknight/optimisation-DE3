@@ -1,0 +1,1 @@
+function f=obj(x)f = 25*x(1)+27*x(2)+39*x(3)+41*x(4);end

@@ -19,12 +19,9 @@ dfxdx = (fx2dx-fxdx)/dx; % first derivative at x+dx
 ddfx = (dfxdx-dfx)/dx; % second derivative at x
 
 
-% 2. 
-
-
-% FUNCTIONS
-function y=fun(x)
-y = 1/100*x.*(x-1).*(x-4).*(x-5).*(x-7);
-end
+% Q2 ANSWER
+x0 = [0.25,0.25,0.25,0.25];
+A =[]; B=[]; Aeq=[]; Beq=[]; lb=zeros(1,4); ub=[];
+[x,fval]=fmincon('obj',x0,A,B,Aeq,Beq,lb,ub,'nonlcon');
 
 
