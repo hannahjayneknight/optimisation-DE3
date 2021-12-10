@@ -19,3 +19,21 @@ objective = p_Q.Coefficients(1) + ...
 
 % non-linear constraints
 
+% linear constraints
+
+% lower and upper bounds
+lb = []; ub = [];
+
+% initial point for design variable --> ??
+x0 = 0;
+
+% optimisation options
+options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp');
+
+% call the solver
+[x, fval] = fmincon(objective, x0, A, b, Aeq, beq, lb, ub, @nonlcon, options);
+
+function [c, ceq] = nonlcon(x)
+    c(1) = x(1);
+    ceq = [];
+end
