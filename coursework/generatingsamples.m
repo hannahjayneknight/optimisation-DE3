@@ -1,11 +1,11 @@
 clear all;
 
 % sampling
-lhs = lhsdesign(30, 4, 'Iterations', 20); %<--- increase this to 70
-R_min = 1; R_max = 10; %revolutions of the helix
-rh_min = 2; rh_max = 5; %radius of the helix
-ro_min = 1.5; ro_max = 20; %outer radius of the water pipe
-p_min = 0.5; p_max = 20; %pitch of the helix
+lhs = lhsdesign(70, 4, 'Iterations', 20); %<--- increase this to 70
+R_min = 2; R_max = 25; %revolutions of the helix
+rh_min = 17.5; rh_max = 23.5; %radius of the helix
+ro_min = 1.5; ro_max = 7.5; %outer radius of the water pipe
+p_min = 4; p_max = 50; %pitch of the helix
 
 R_range = R_max - R_min; %ranges
 rh_range = rh_max - rh_min;
