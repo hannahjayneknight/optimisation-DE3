@@ -51,7 +51,8 @@ options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp');
 
 % non-linear constraints
 function [c, ceq] = nonlcon(x)
-    c(1) = 100 - x(1)*x(4); %g7
+    c(1) = 33 - x(1)*x(4); 
+    c(2) = -100 + x(1)*x(4); 
     ceq = mod(x(1), 1);
 end
 
