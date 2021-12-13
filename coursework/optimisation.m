@@ -30,7 +30,7 @@ b = [0 ;
     -1.5e-03 ;
     -1e-03 ;
     25e-03 ;
-    -17e-03 ];
+    -17.5e-03 ];
 
 % linear equality constraints
 Aeq = [];
@@ -54,3 +54,9 @@ function [c, ceq] = nonlcon(x)
     c(1) = 100 - x(1)*x(4); %g7
     ceq = mod(x(1), 1);
 end
+
+%function [c, ceq] = nonlcon2(x) %if g7 is made an equality
+    %c = [];
+    %ceq(1) = mod(x(1), 1);
+    %ceq(2) = 100 - x(1)*x(4); %g7 
+%end
