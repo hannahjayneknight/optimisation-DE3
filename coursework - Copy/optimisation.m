@@ -10,7 +10,7 @@ p_Q = polyfitn(ds,Q,'constant, x1, x2, x3, x4, x1^2, x2^2, x3^2, x4^2');
 
 % coefficients = p_Q.Coefficients(1)...
 % x1 = R
-% x2 = rh
+% x2 = ri
 % x3 = ro
 % x4 = p
 objective = @(x) ...
@@ -21,16 +21,12 @@ objective = @(x) ...
             p_Q.Coefficients(8)*(x(3).^2) + p_Q.Coefficients(9)*(x(4).^2);
 
 % linear inequality constraints
-A = [0, -1, 1, 0 ;
-    0, 0, -1, 0;
+A = [0, 0, -1, 0;
     0, 0, 2, -1;
-    0, 1, 1, 0;
     0, -1, 1, 0];
-b = [0 ;
-    -1.5 ;
-    -1 ;
-    25 ;
-    -17 ];
+b = [-1.5e-03 ;
+    -1e-03 ;
+    0.5e-03 ];
 
 % linear equality constraints
 Aeq = [];
