@@ -23,10 +23,10 @@ objective = @(x) ...
 % linear inequality constraints
 A = [0, 0, -1, 0;
     0, 0, 2, -1;
-    0, -1, 1, 0];
+    0, 1, -1, 0];
 b = [-1.5e-03 ;
     -1e-03 ;
-    0.5e-03 ];
+    -0.5e-03 ];
 
 % linear equality constraints
 Aeq = [];
