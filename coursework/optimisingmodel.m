@@ -54,7 +54,7 @@ rsq_poly = 1 - norm(forcast_poly - difference_poly)^2/norm(difference_poly-mean(
 %       the higher the rsq the better
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% fmincon
+% setting up optimisation and SQP
 
 
 % coefficients = p_Q.Coefficients(1)...
@@ -88,17 +88,31 @@ lb = [2, 17.5e-03, 1.5e-03, 4e-03]; ub = [25, 23.5e-03, 7.5e-03, 50e-03];
 x0 = [5, 23.5e-03, 2.5e-03, 10e-03];
 
 % optimisation options
-options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp');
+%options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp');
 
 % call the solver
-[x_fmincon, fval] = fmincon(objective, x0, A, b, Aeq, beq, lb, ub, @nonlcon, options);
+%[x, fval] = fmincon(objective, x0, A, b, Aeq, beq, lb, ub, @nonlcon, options);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ga
 
-options = optimoptions('ga','ConstraintTolerance',1e-6);
-[x_ga,gval] = ga(objective, 4, A, b, Aeq, beq, lb, ub, @nonlcon, options);
+%options = optimoptions('ga','ConstraintTolerance',1e-6);
+%[x, fval] = ga(objective, 4, A, b, Aeq, beq, lb, ub, @nonlcon, options);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% interior-point
+
+%fmincon cannot evalute the original derived equation, therefore the
+%meta-model is used
+objective = @(x) ...
+            (0.044586081200103 + ...
+            0.622902067280257*x(1) + 0.181019850073204*x(2) + ...
+            0.523621485465963*x(3) + 0.058712578215755*x(4) + ...
+            -0.040340184693986*(x(1).^2) + 0.078212743725499*(x(2).^2) + ...
+            -0.009806673120655*(x(3).^2) + -0.016728228237762*(x(4).^2));
+options = optimoptions('fmincon','Algorithm','interior-point',...
+    "SpecifyConstraintGradient",true,"SpecifyObjectiveGradient",true);
+[x, fval] = fmincon(objective,x0,A,b,Aeq,beq,lb,ub,@nonlcon,options);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Functions
