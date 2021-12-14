@@ -26,6 +26,13 @@ beta = mvregress(dataTrain_ds, dataTrain_Q);
 
 %second-order polynomial regression
 p_Q = polyfitn(dataTrain_ds,dataTrain_Q,'constant, x1, x2, x3, x4, x1^2, x2^2, x3^2, x4^2');
+%NB:
+%objective = @(x) ...
+%            p_Q.Coefficients(1) + ...
+%            p_Q.Coefficients(2)*x(1) + p_Q.Coefficients(3)*x(2) + ...
+%            p_Q.Coefficients(4)*x(3) + p_Q.Coefficients(5)*x(4) + ...
+%            p_Q.Coefficients(6)*(x(1).^2) + p_Q.Coefficients(7)*(x(2).^2) + ...
+%            p_Q.Coefficients(8)*(x(3).^2) + p_Q.Coefficients(9)*(x(4).^2);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Testing the models
@@ -47,7 +54,7 @@ rsq_poly = 1 - norm(forcast_poly - difference_poly)^2/norm(difference_poly-mean(
 %       the higher the rsq the better
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Optimisation
+% fmincon
 
 
 % coefficients = p_Q.Coefficients(1)...
@@ -55,12 +62,7 @@ rsq_poly = 1 - norm(forcast_poly - difference_poly)^2/norm(difference_poly-mean(
 % x2 = rh
 % x3 = ro
 % x4 = p
-objective = @(x) ...
-            p_Q.Coefficients(1) + ...
-            p_Q.Coefficients(2)*x(1) + p_Q.Coefficients(3)*x(2) + ...
-            p_Q.Coefficients(4)*x(3) + p_Q.Coefficients(5)*x(4) + ...
-            p_Q.Coefficients(6)*(x(1).^2) + p_Q.Coefficients(7)*(x(2).^2) + ...
-            p_Q.Coefficients(8)*(x(3).^2) + p_Q.Coefficients(9)*(x(4).^2);
+objective = @(x) 2*pi*237*x(1)*sqrt( (x(4)^2) + ( 2*pi * x(2)) ^2)*107/ log(x(3)/(x(3)-1e-03)); %derived equation for Q
 
 % linear inequality constraints
 A = [0, -1, 1, 0 ;
@@ -89,7 +91,17 @@ x0 = [5, 23.5e-03, 2.5e-03, 10e-03];
 options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp');
 
 % call the solver
-[x, fval] = fmincon(objective, x0, A, b, Aeq, beq, lb, ub, @nonlcon, options);
+[x_fmincon, fval] = fmincon(objective, x0, A, b, Aeq, beq, lb, ub, @nonlcon, options);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ga
+
+options = optimoptions('ga','ConstraintTolerance',1e-6);
+[x_ga,gval] = ga(objective, 4, A, b, Aeq, beq, lb, ub, @nonlcon, options);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Functions
 
 % non-linear constraints
 function [c, ceq] = nonlcon(x)
