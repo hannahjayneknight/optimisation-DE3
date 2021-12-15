@@ -62,7 +62,7 @@ rsq_poly = 1 - norm(forcast_poly - difference_poly)^2/norm(difference_poly-mean(
 % x2 = rh
 % x3 = ro
 % x4 = p
-objective = @(x) 2*pi*237*x(1)*sqrt( (x(4)^2) + ( 2*pi * x(2)) ^2)*107/ log(x(3)/(x(3)-1e-03)); %derived equation for Q
+
 
 % linear inequality constraints
 A = [0, -1, 1, 0 ;
@@ -85,7 +85,7 @@ lb = [2, 17.5e-03, 1.5e-03, 4e-03]; ub = [25, 23.5e-03, 7.5e-03, 50e-03];
 
 % initial point for design variable (=current values of nespresso's
 % thermoblock)
-x0 = [5, 23.5e-03, 2.5e-03, 10e-03];
+%x0 = [5, 23.5e-03, 2.5e-03, 10e-03];
 
 % optimisation options
 %options = optimoptions('fmincon', 'Display', 'iter', 'Algorithm', 'sqp');
@@ -96,23 +96,36 @@ x0 = [5, 23.5e-03, 2.5e-03, 10e-03];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ga
 
+%objective = @(x) 2*pi*237*x(1)*sqrt( (x(4)^2) + ( 2*pi * x(2)) ^2)*107/ log(x(3)/(x(3)-1e-03)); %derived equation for Q
+%{
+objective = @(x) ...
+            (0.044586081200103 + ...
+            0.622902067280257*x(1) + 0.181019850073204*x(2) + ...
+            0.523621485465963*x(3) + 0.058712578215755*x(4) ...
+            -0.040340184693986*(x(1)^2) + 0.078212743725499*(x(2)^2) ...
+            -0.009806673120655*(x(3)^2) -0.016728228237762*(x(4)^2));
+%}
 %options = optimoptions('ga','ConstraintTolerance',1e-6);
-%[x, fval] = ga(objective, 4, A, b, Aeq, beq, lb, ub, @nonlcon, options);
+%x = ga(objective, 4, A, b, Aeq, beq, lb, ub, @nonlcon, options);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % interior-point
 
 %fmincon cannot evalute the original derived equation, therefore the
 %meta-model is used
+%x0 = [10, 10, 10, 10];
+
+%{ 
 objective = @(x) ...
             (0.044586081200103 + ...
             0.622902067280257*x(1) + 0.181019850073204*x(2) + ...
-            0.523621485465963*x(3) + 0.058712578215755*x(4) + ...
-            -0.040340184693986*(x(1).^2) + 0.078212743725499*(x(2).^2) + ...
-            -0.009806673120655*(x(3).^2) + -0.016728228237762*(x(4).^2));
-options = optimoptions('fmincon','Algorithm','interior-point',...
-    "SpecifyConstraintGradient",true,"SpecifyObjectiveGradient",true);
-[x, fval] = fmincon(objective,x0,A,b,Aeq,beq,lb,ub,@nonlcon,options);
+            0.523621485465963*x(3) + 0.058712578215755*x(4) ...
+            -0.040340184693986*(x(1)^2) + 0.078212743725499*(x(2)^2) ...
+            -0.009806673120655*(x(3)^2) -0.016728228237762*(x(4)^2));
+%}
+%options =   optimoptions('fmincon','Algorithm','interior-point');
+%x = fmincon(objective,x0,A,b,Aeq,beq,lb,ub,@nonlcon,options);
+%fval = 2*pi*237*x(1)*sqrt( (x(4)^2) + ( 2*pi * x(2)) ^2)*107/ log(x(3)/(x(3)-1e-03));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Functions
@@ -126,12 +139,14 @@ function [c, ceq] = nonlcon(x)
             0.523621485465963*x(3) + 0.058712578215755*x(4) + ...
             -0.040340184693986*(x(1).^2) + 0.078212743725499*(x(2).^2) + ...
             -0.009806673120655*(x(3).^2) + -0.016728228237762*(x(4).^2));
-    ceq = mod(x(1), 1);
-    %ceq = [];
+    %ceq = mod(x(1), 1); %only include for sqp
+    ceq = [];
 end
 
-%function [c, ceq] = nonlcon2(x) %if g7 is made an equality
-    %c = [];
-    %ceq(1) = mod(x(1), 1);
-    %ceq(2) = 100 - x(1)*x(4); %g7 
-%ends
+%objective = @(x) 2*pi*237*x(1)*sqrt( (x(4)^2) + ( 2*pi * x(2)) ^2)*107/ log(x(3)/(x(3)-1e-03)); %derived equation for Q
+%objective = @(x) ...
+%            (0.044586081200103 + ...
+%            0.622902067280257*x(1) + 0.181019850073204*x(2) + ...
+%            0.523621485465963*x(3) + 0.058712578215755*x(4) ...
+%            -0.040340184693986*(x(1)^2) + 0.078212743725499*(x(2)^2) ...
+%            -0.009806673120655*(x(3)^2) -0.016728228237762*(x(4)^2));
