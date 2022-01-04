@@ -52,8 +52,19 @@ figure(5)
 hold on
 contour(x1,x2,f22,[0:35]);
 
-contour(x1,x2,g,[1,1],'ShowText','on'); % this plots a line where g<=1
+contour(x1,x2,g,[1,1],'ShowText','on'); % this plots a line where g2<=1
 hold off
 
+%% 
+% which one is active: g or g2?
 
+figure(6)
+hold on
+contour(x1,x2,f22,[0:35]);
+
+contour(x1,x2,g,[0,1],'ShowText','on'); % on this we see g= and g2<=1
+hold off
+
+% the objective value will not change as g1 is active (dominates) and g2 in
+% inactive.
 
