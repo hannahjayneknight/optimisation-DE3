@@ -33,9 +33,8 @@ white_wine_x_newTest1 = mapstd('apply',white_wine_x_new(splitPt1+1:end,:)',PS_ww
 white_wine_y_newTest1 = mapstd('apply',white_wine_y_new(splitPt1+1:end)',PS_wwyTrain1);
 
 %%
-% extracting the first 5 test data points for red wine
-extractx = red_wine_x_newTest1(:,(1: 5));
-extracty = red_wine_y_newTest1(:,(1: 5));
+% extracting the first 5 test data points
+extractx = red_wine_x_newTest1((1: 5),:);
 
 
 %%
