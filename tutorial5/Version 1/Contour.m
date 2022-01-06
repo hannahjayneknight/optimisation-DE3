@@ -1,9 +1,14 @@
+% plotting the objective function and constraints
+
 x=linspace(-3,3);
 y=linspace(-3,3);
-[X Y]=meshgrid(x,y);
+[X Y]=meshgrid(x,y); % creating input values
+
 C1=Y.^2-2*X;
-C2=(Y-1).^2+5*X-15;
-F=X.^2+(Y-3).^2;
+C2=(Y-1).^2+5*X-15; % constraints
+
+F=X.^2+(Y-3).^2; % obj function
+
 figure
 axis([-3,3,-3,3])
 xlabel('X(1)')
