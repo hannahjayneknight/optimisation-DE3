@@ -4,6 +4,9 @@
 % In the command line: T4_q3([ 1; -1]) 
 % (changing the coordinates to whatever starting value of x we choose.
 
+% NB: If you keep the plot up, and rerun the script with a new coordinate,
+% you can see the new decscent on the plot.
+
 function T4_q3(x0)
 
 
